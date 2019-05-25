@@ -31,6 +31,23 @@
 (require 'polymode)
 (require 'php-mode)
 
+(define-innermode php-innermode
+  :mode 'php-mode
+  :head-matcher (eval-when-compile
+                  (rx (or (: "<?php" word-end)
+                          (: "<?=")
+                          (: "<?" (or " " "\t" "\n" "\r")))))
+  :tail-matcher (eval-when-compile
+                  (rx "?>"))
+  :head-mode 'body
+  :tail-mode 'body)
+
+(define-polymode poly-php-html-mode
+  :hostmode 'poly-html-hostmode
+  :innermodes '(php-innermode))
+
+;;;###autoload
+(autoload 'poly-php-html-mode "poly-php")
 
 (provide 'poly-php)
 ;;; poly-php.el ends here
