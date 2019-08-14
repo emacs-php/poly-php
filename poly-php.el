@@ -29,23 +29,12 @@
 
 ;;; Code:
 (require 'polymode)
+(require 'php)
 (require 'php-mode)
-
-(defvar poly-php-ignore-php-close-tag-faces
-  '(php-string
-    font-lock-doc-face
-    font-lock-comment-face
-    font-lock-string-face))
 
 (defconst poly-php--re-tag-tail-matcher
   (eval-when-compile
     (rx "?>")))
-
-(defsubst poly-php--at-not-literal (point)
-  "Return T when `POINT' not at out of string literal or comment."
-  (let ((face (plist-get (text-properties-at point) 'face)))
-    (null (memq (if (consp face) (car face) face)
-                poly-php-ignore-php-close-tag-faces))))
 
 (defun poly-php--tag-tail-matcher (ahead)
   "Matcher for tail of PHP block."
@@ -54,7 +43,7 @@
           found matched)
       (while (and (not found)
                   (setq matched (funcall re-search poly-php--re-tag-tail-matcher nil t)))
-        (when (and matched (poly-php--at-not-literal (point)))
+        (when (and matched (not (php-in-string-or-comment-p)))
           (setq found (cons (match-beginning 0) (match-end 0)))))
       found)))
 
