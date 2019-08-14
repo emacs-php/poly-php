@@ -29,7 +29,23 @@
 
 ;;; Code:
 (require 'polymode)
+(require 'php)
 (require 'php-mode)
+
+(defconst poly-php--re-tag-tail-matcher
+  (eval-when-compile
+    (rx "?>")))
+
+(defun poly-php--tag-tail-matcher (ahead)
+  "Matcher for tail of PHP block."
+  (save-excursion
+    (let ((re-search (if (< ahead 0) #'re-search-backward #'re-search-forward))
+          found matched)
+      (while (and (not found)
+                  (setq matched (funcall re-search poly-php--re-tag-tail-matcher nil t)))
+        (when (and matched (not (php-in-string-or-comment-p)))
+          (setq found (cons (match-beginning 0) (match-end 0)))))
+      found)))
 
 (define-innermode php-innermode
   :mode 'php-mode
@@ -37,8 +53,7 @@
                   (rx (or (: "<?php" word-end)
                           (: "<?=")
                           (: "<?" (or " " "\t" "\n" "\r")))))
-  :tail-matcher (eval-when-compile
-                  (rx "?>"))
+  :tail-matcher #'poly-php--tag-tail-matcher
   :head-mode 'body
   :tail-mode 'body)
 
