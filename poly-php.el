@@ -1,6 +1,6 @@
 ;;; poly-php.el --- Polymode for PHP                 -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2019  Friends of Emacs-PHP
+;; Copyright (C) 2024  Friends of Emacs-PHP
 
 ;; Author: USAMI Kenta <tadsan@zonu.me>
 ;; Created: 3 Mar 2019
