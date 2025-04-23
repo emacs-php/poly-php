@@ -1,3 +1,5 @@
+;; -*- mode: eask; lexical-binding: t -*-
+
 (package "poly-php"
          "0.0.1"
          "Polymode for PHP")
